@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HOT TANDOOR | Premium Indian & Chinese Cuisine</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Montserrat:wght@300;400;600&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Tailwind Config -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        gold: {
+                            400: '#D4AF37',
+                            500: '#C5A028',
+                            600: '#B08D1E',
+                        },
+                        brand: {
+                            dark: '#0a0a0a',
+                            darker: '#050505',
+                            red: '#8B0000',
+                            accent: '#D90429'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Montserrat', 'sans-serif'],
+                        serif: ['Playfair Display', 'serif'],
+                        display: ['Cinzel', 'serif'],
+                    },
+                    backgroundImage: {
+                        'hero-pattern': "linear-gradient(to bottom, rgba(0,0,0,0.3), rgba(10,10,10,1)), url('https://images.unsplash.com/photo-1596797038530-2c107229654b?q=80&w=2070&auto=format&fit=crop')",
+                        'texture': "url('https://www.transparenttextures.com/patterns/dark-matter.png')"
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Custom Animations & Utilities */
+        body {
+            background-color: #050505;
+            color: #f3f4f6;
+            overflow-x: hidden;
+        }
+
+        .text-glow {
+            text-shadow: 0 0 20px rgba(212, 175, 55, 0.3);
+        }
+
+        .gold-gradient-text {
+            background: linear-gradient(to right, #BF953F, #FCF6BA, #B38728, #FBF5B7, #AA771C);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .card-hover {
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .card-hover:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px -5px rgba(212, 175, 55, 0.15);
+            border-color: rgba(212, 175, 55, 0.5);
+        }
+
+        /* Scroll Reveal Animation Classes */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease-out;
+        }
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0a0a0a;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #333;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #D4AF37;
+        }
+
+        /* Loader */
+        #loader {
+            position: fixed;
+            inset: 0;
+            background: #000;
+            z-index: 9999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 0.5s ease;
+        }
+    </style>
+</head>
+<body class="antialiased relative">
+
+    <!-- Loading Screen -->
+    <div id="loader">
+        <div class="text-center">
+            <h1 class="font-display text-4xl md:text-6xl text-gold-400 animate-pulse tracking-widest">HOT TANDOOR</h1>
+            <p class="text-gray-400 mt-2 text-sm tracking-[0.3em]">LOADING EXPERIENCE</p>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav id="navbar" class="fixed w-full z-50 transition-all duration-300 py-4 px-6 lg:px-12 border-b border-transparent">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <a href="#" class="font-display text-2xl md:text-3xl font-bold tracking-wider text-white group">
+                HOT <span class="text-gold-400 group-hover:text-white transition-colors">TANDOOR</span>
+            </a>
+            
+            <!-- Desktop Menu -->
+            <div class="hidden md:flex items-center space-x-8">
+                <a href="#home" class="text-sm uppercase tracking-widest hover:text-gold-400 transition-colors">Home</a>
+                <a href="#about" class="text-sm uppercase tracking-widest hover:text-gold-400 transition-colors">About</a>
+                <a href="#menu" class="text-sm uppercase tracking-widest hover:text-gold-400 transition-colors">Menu</a>
+                <a href="#gallery" class="text-sm uppercase tracking-widest hover:text-gold-400 transition-colors">Gallery</a>
+                <a href="#contact" class="px-6 py-2 border border-gold-400 text-gold-400 hover:bg-gold-400 hover:text-black transition-all duration-300 uppercase text-xs tracking-widest font-bold">Reservations</a>
+            </div>
+
+            <!-- Mobile Menu Button -->
+            <button id="mobile-menu-btn" class="md:hidden text-gold-400 text-2xl">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+        
+        <!-- Mobile Menu Overlay -->
+        <div id="mobile-menu" class="fixed inset-0 bg-black/95 backdrop-blur-xl z-40 transform translate-x-full transition-transform duration-300 flex flex-col justify-center items-center space-y-8 md:hidden">
+            <button id="close-menu-btn" class="absolute top-6 right-6 text-white text-3xl">
+                <i class="fas fa-times"></i>
+            </button>
+            <a href="#home" class="mobile-link text-2xl font-display text-white hover:text-gold-400">Home</a>
+            <a href="#about" class="mobile-link text-2xl font-display text-white hover:text-gold-400">About</a>
+            <a href="#menu" class="mobile-link text-2xl font-display text-white hover:text-gold-400">Menu</a>
+            <a href="#gallery" class="mobile-link text-2xl font-display text-white hover:text-gold-400">Gallery</a>
+            <a href="#contact" class="mobile-link text-2xl font-display text-gold-400">Contact Us</a>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="relative h-screen w-full bg-hero-pattern bg-cover bg-center bg-no-repeat bg-fixed flex items-center justify-center">
+        <div class="absolute inset-0 bg-black/40"></div>
+        
+        <div class="relative z-10 text-center px-4 max-w-5xl mx-auto">
+            <p class="text-gold-400 tracking-[0.5em] uppercase text-sm md:text-base mb-4 animate-fade-in-down">Welcome to</p>
+            <h1 class="font-display text-5xl md:text-7xl lg:text-9xl font-bold text-white mb-2 leading-tight drop-shadow-2xl">
+                HOT <span class="text-gold-400">TANDOOR</span>
+            </h1>
+            <div class="h-1 w-24 bg-gold-400 mx-auto my-6"></div>
+            <p class="font-serif text-xl md:text-3xl text-gray-200 mb-10 italic font-light tracking-wide">
+                Indian • Chinese • Tandoor Special Restaurant
+            </p>
+            
+            <div class="flex flex-col md:flex-row gap-4 justify-center items-center">
+                <a href="tel:+919577407524" class="group relative px-8 py-4 bg-gold-400 text-black font-bold tracking-widest uppercase overflow-hidden transition-all hover:bg-white">
+                    <span class="relative z-10 flex items-center gap-2">
+                        <i class="fas fa-phone"></i> Call Now
+                    </span>
+                </a>
+                <a href="https://wa.me/919577407524" target="_blank" class="group relative px-8 py-4 border border-white text-white font-bold tracking-widest uppercase overflow-hidden hover:border-green-500 hover:text-green-500 transition-all">
+                    <span class="relative z-10 flex items-center gap-2">
+                        <i class="fab fa-whatsapp"></i> Order on WhatsApp
+                    </span>
+                </a>
+                <a href="#menu" class="group relative px-8 py-4 border border-gold-400 text-gold-400 font-bold tracking-widest uppercase overflow-hidden hover:bg-gold-400 hover:text-black transition-all">
+                    <span class="relative z-10 flex items-center gap-2">
+                        <i class="fas fa-utensils"></i> View Menu
+                    </span>
+                </a>
+            </div>
+        </div>
+        
+        <!-- Scroll Down Indicator -->
+        <div class="absolute bottom-10 left-1/2 transform -translate-x-1/2 animate-bounce">
+            <a href="#about" class="text-white/50 hover:text-gold-400 transition-colors">
+                <i class="fas fa-chevron-down text-2xl"></i>
+            </a>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="py-24 bg-brand-darker relative overflow-hidden">
+        <!-- Decorative Elements -->
+        <div class="absolute top-0 left-0 w-64 h-64 bg-gold-400/5 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2"></div>
+        <div class="absolute bottom-0 right-0 w-96 h-96 bg-red-900/10 rounded-full blur-3xl translate-x-1/3 translate-y-1/3"></div>
+
+        <div class="max-w-7xl mx-auto px-6 lg:px-12">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+                <div class="reveal">
+                    <h4 class="text-gold-400 tracking-[0.3em] uppercase text-sm font-bold mb-2">Our Story</h4>
+                    <h2 class="font-display text-4xl md:text-5xl text-white mb-6">A Legacy of <span class="gold-gradient-text">Flavor</span></h2>
+                    <p class="text-gray-400 leading-relaxed mb-6 font-light text-lg">
+                        Located in the heart of Titabar, HOT TANDOOR is not just a restaurant; it's a culinary destination. We have built our reputation on serving the most authentic Tandoori delicacies, aromatic Biryanis, and savory Chinese cuisine in Assam.
+                    </p>
+                    <p class="text-gray-400 leading-relaxed mb-8 font-light text-lg">
+                        Every dish is a masterpiece, prepared with fresh ingredients, traditional spices, and a passion for perfection. Whether you crave the smoky char of our Tandoor or the comfort of a hot bowl of noodles, we promise an unforgettable dining experience in a cozy, welcoming atmosphere.
+                    </p>
+                    
+                    <div class="grid grid-cols-3 gap-6 border-t border-white/10 pt-8">
+                        <div class="text-center">
+                            <i class="fas fa-utensils text-gold-400 text-2xl mb-2"></i>
+                            <p class="text-xs uppercase tracking-widest text-gray-500">Fresh Ingredients</p>
+                        </div>
+                        <div class="text-center">
+                            <i class="fas fa-fire text-gold-400 text-2xl mb-2"></i>
+                            <p class="text-xs uppercase tracking-widest text-gray-500">Live Tandoor</p>
+                        </div>
+                        <div class="text-center">
+                            <i class="fas fa-smile text-gold-400 text-2xl mb-2"></i>
+                            <p class="text-xs uppercase tracking-widest text-gray-500">Friendly Service</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="relative reveal delay-200">
+                    <div class="absolute inset-0 border-2 border-gold-400 translate-x-4 translate-y-4 z-0"></div>
+                    <img src="https://images.unsplash.com/photo-1514933651103-005eec06c04b?q=80&w=1974&auto=format&fit=crop" alt="Restaurant Interior" class="relative z-10 w-full h-[500px] object-cover grayscale hover:grayscale-0 transition-all duration-700 shadow-2xl">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Menu Section -->
+    <section id="menu" class="py-24 bg-brand-dark relative">
+        <div class="max-w-7xl mx-auto px-6 lg:px-12">
+            <div class="text-center mb-16 reveal">
+                <h4 class="text-gold-400 tracking-[0.3em] uppercase text-sm font-bold mb-2">Culinary Delights</h4>
+                <h2 class="font-display text-4xl md:text-6xl text-white">Our Menu</h2>
+                <div class="w-24 h-1 bg-gold-400 mx-auto mt-6"></div>
+            </div>
+
+            <!-- Menu Categories -->
+            <div class="space-y-20">
+                
+                <!-- Starters -->
+                <div class="reveal">
+                    <h3 class="font-serif text-3xl text-gold-400 mb-8 border-b border-white/10 pb-4 flex items-center gap-4">
+                        <i class="fas fa-drumstick-bite text-2xl"></i> Starters
+                    </h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <!-- Item -->
+                        <div class="bg-white/5 p-6 rounded-sm border border-white/5 card-hover group">
+                            <div class="flex justify-between items-start mb-2">
+                                <h4 class="text-xl font-serif text-white group-hover:text-gold-400 transition-colors">Chilli Paneer Dry</h4>
+                                <span class="text-gold-400 font-bold">₹260</span>
+                            </div>
+                            <p class="text-gray-500 text-sm">Crispy paneer tossed in spicy sauces.</p>
+                        </div>
+                        <div class="bg-white/5 p-6 rounded-sm border border-white/5 card-hover group">
+                            <div class="flex justify-between items-start mb-2">
+                                <h4 class="text-xl font-serif text-white group-hover:text-gold-400 transition-colors">Chicken Wings (4 pcs)</h4>
+                                <span class="text-gold-400 font-bold">₹140</span>
+                            </div>
+                            <p class="text-gray-500 text-sm">Perfectly spiced and deep fried.</p>
+                        </div>
+                        <div class="bg-white/5 p-6 rounded-sm border border-white/5 card-hover group">
+                            <div class="flex justify-between items-start mb-2">
+                                <h4 class="text-xl font-serif text-white group-hover:text-gold-400 transition-colors">Chicken Lollipop</h4>
+                                <span class="text-gold-400 font-bold">₹180</span>
+                            </div>
+                            <p class="text-gray-500 text-sm">Frenched chicken wings in spicy batter.</p>
+                        </div>
+                        <div class="bg-white/5 p-6 rounded-sm border border-white/5 card-hover group">
+                            <div class="flex justify-between items-start mb-2">
+                                <h4 class="text-xl font-serif text-white group-hover:text-gold-400 transition-colors">Drums Of Heaven</h4>
+                                <span class="text-gold-400 font-bold">₹190</span>
+                            </div>
+                            <p class="text-gray-500 text-sm">Signature spicy chicken drumsticks.</p>
+                        </div>
+                        <div class="bg-white/5 p-6 rounded-sm border border-white/5 card-hover group">
+                            <div class="flex justify-between items-start mb-2">
+                                <h4 class="text-xl font-serif text-white group-hover:text-gold-400 transition-colors">Crispy Baby Corn</h4>
+                                <span class="text-gold-400 font-bold">₹210</span>
+                            </div>
+                            <p class="text-gray-500 text-sm">Golden fried baby corn.</p>
+                        </div>
+                        <div class="bg-white/5 p-6 rounded-sm border border-white/5 card-hover group">
+                            <div class="flex justify-between items-start mb-2">
+                                <h4 class="text-xl font-serif text-white group-hover:text-gold-400 transition-colors">Chicken 65 Dry</h4>
+                                <span class="text-gold-400 font-bold">₹230</span>
+                            </div>
+                            <p class="text-gray-500 text-sm">South Indian style spicy fried chicken.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Main Course -->
+                <div class="reveal">
+                    <h3 class="font-serif text-3xl text-gold-400 mb-8 border-b border-white/10 pb-4 flex items-center gap-4">
+                        <i class="fas fa-bowl-food text-2xl"></i> Main Course
+                    </h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="bg-white/5 p-6 rounded-sm border border-white/5 card-hover group flex justify-between items-center">
+                            <div>
+                                <h4 class="text-xl font-serif text-white group-hover:text-gold-400 transition-colors">Chicken Butter Masala (5 pcs)</h4>
+                                <p class="text-gray-500 text-sm mt-1">Rich, creamy tomato-based gravy.</p>
+                            </div>
+                            <span class="text-gold-400 font-bold text-xl">₹330</span>
+                        </div>
+                        <div class="bg-white/5 p-6 rounded-sm border border-white/5 card-hover group flex justify-between items-center">
+                            <div>
+                                <h4 class="text-xl font-serif text-white group-hover:text-gold-400 transition-colors">Kadhai Chicken (6 pcs)</h4>
+                                <p class="text-gray-500 text-sm mt-1">Cooked with bell peppers and onions.</p>
+                            </div>
+                            <span class="text-gold-400 font-bold text-xl">₹290</span>
+                        </div>
+                        <div class="bg-white/5 p-6 rounded-sm border border-white/5 card-hover group flex justify-between items-center">
+                            <div>
+                                <h4 class="text-xl font-serif text-white group-hover:text-gold-400 transition-colors">Paneer Butter Masala</h4>
+                                <p class="text-gray-500 text-sm mt-1">Cottage cheese in buttery gravy.</p>
+                            </div>
+                            <span class="text-gold-400 font-bold text-xl">₹280</span>
+                        </div>
+                         <div class="bg-white/5 p-6 rounded-sm border border-white/5 card-hover group flex justify-between items-center">
+                            <div>
+                                <h4 class="text-xl font-serif text-white group-hover:text-gold-400 transition-colors">Chilli Chicken Gravy (8 pcs)</h4>
+                                <p class="text-gray-500 text-sm mt-1">Indo-chinese style spicy gravy.</p>
+                            </div>
+                            <span class="text-gold-400 font-bold text-xl">₹290</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Rice & Biryani -->
+                <div class="reveal">
+                    <h3 class="font-serif text-3xl text-gold-400 mb-8 border-b border-white/10 pb-4 flex items-center gap-4">
+                        <i class="fas fa-bread-slice text-2xl"></i> Rice, Breads & Biryani
+                    </h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                        <!-- Breads -->
+                        <div class="bg-white/5 p-6 rounded-sm border border-white/5 card-hover group">
+                            <h4 class="text-lg font-serif text-white group-hover:text-gold-400 transition-colors">Butter Roti</h4>
+                            <span class="text-gold-400 font-bold block mt-2">₹30</span>
+                        </div>
+                        <div class="bg-white/5 p-6 rounded-sm border border-white/5 card-hover group">
+                            <h4 class="text-lg font-serif text-white group-hover:text-gold-400 transition-colors">Tawa Roti</h4>
+                            <span class="text-gold-400 font-bold block mt-2">₹20</span>
+                        </div>
+                        <!-- Rice -->
+                        <div class="bg-white/5 p-6 rounded-sm border border-white/5 card-hover group">
+                            <h4 class="text-lg font-serif text-white group-hover:text-gold-400 transition-colors">Veg Biryani</h4>
+                            <span class="text-gold-400 font-bold block mt-2">₹190</span>
+                        </div>
+                        <div class="bg-white/5 p-6 rounded-sm border border-white/5 card-hover group">
+                            <h4 class="text-lg font-serif text-white group-hover:text-gold-400 transition-colors">Chicken Biryani</h4>
+                            <span class="text-gold-400 font-bold block mt-2">₹200</span>
+                        </div>
+                        <div class="bg-white/5 p-6 rounded-sm border border-white/5 card-hover group">
+                            <h4 class="text-lg font-serif text-white group-hover:text-gold-400 transition-colors">Paneer Biryani</h4>
+                            <span class="text-gold-400 font-bold block mt-2">₹170</span>
+                        </div>
+                        <div class="bg-white/5 p-6 rounded-sm border border-white/5 card-hover group">
+                            <h4 class="text-lg font-serif text-white group-hover:text-gold-400 transition-colors">Chicken Pulao</h4>
+                            <span class="text-gold-400 font-bold block mt-2">₹270</span>
+                        </div>
+                         <div class="bg-white/5 p-6 rounded-sm border border-white/5 card-hover group">
+                            <h4 class="text-lg font-serif text-white group-hover:text-gold-400 transition-colors">Jeera Rice</h4>
+                            <span class="text-gold-400 font-bold block mt-2">₹130</span>
+                        </div>
+                         <div class="bg-white/5 p-6 rounded-sm border border-white/5 card-hover group">
+                            <h4 class="text-lg font-serif text-white group-hover:text-gold-400 transition-colors">Steamed Rice</h4>
+                            <span class="text-gold-400 font-bold block mt-2">₹100</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Chinese Specials -->
+                <div class="reveal">
+                    <h3 class="font-serif text-3xl text-gold-400 mb-8 border-b border-white/10 pb-4 flex items-center gap-4">
+                        <i class="fas fa-bacon text-2xl"></i> Chinese & Pasta
+                    </h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="bg-white/5 p-6 rounded-sm border border-white/5 card-hover group flex justify-between items-center">
+                            <div>
+                                <h4 class="text-xl font-serif text-white group-hover:text-gold-400 transition-colors">Chicken Chowmein</h4>
+                            </div>
+                            <span class="text-gold-400 font-bold text-xl">₹100</span>
+                        </div>
+                        <div class="bg-white/5 p-6 rounded-sm border border-white/5 card-hover group flex justify-between items-center">
+                            <div>
+                                <h4 class="text-xl font-serif text-white group-hover:text-gold-400 transition-colors">Mixed Chowmein</h4>
+                            </div>
+                            <span class="text-gold-400 font-bold text-xl">₹140</span>
+                        </div>
+                        <div class="bg-white/5 p-6 rounded-sm border border-white/5 card-hover group flex justify-between items-center">
+                            <div>
+                                <h4 class="text-xl font-serif text-white group-hover:text-gold-400 transition-colors">Chicken Fried Rice</h4>
+                            </div>
+                            <span class="text-gold-400 font-bold text-xl">₹100</span>
+                        </div>
+                        <div class="bg-white/5 p-6 rounded-sm border border-white/5 card-hover group flex justify-between items-center">
+                            <div>
+                                <h4 class="text-xl font-serif text-white group-hover:text-gold-400 transition-colors">Mix Fried Rice</h4>
+                            </div>
+                            <span class="text-gold-400 font-bold text-xl">₹140</span>
+                        </div>
+                        <div class="bg-white/5 p-6 rounded-sm border border-white/5 card-hover group flex justify-between items-center">
+                            <div>
+                                <h4 class="text-xl font-serif text-white group-hover:text-gold-400 transition-colors">Chicken Pasta</h4>
+                            </div>
+                            <span class="text-gold-400 font-bold text-xl">₹200</span>
+                        </div>
+                        <div class="bg-white/5 p-6 rounded-sm border border-white/5 card-hover group flex justify-between items-center">
+                            <div>
+                                <h4 class="text-xl font-serif text-white group-hover:text-gold-400 transition-colors">Cheese Chicken Pasta</h4>
+                            </div>
+                            <span class="text-gold-400 font-bold text-xl">₹250</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Snacks, Momos, Rolls -->
+                <div class="reveal">
+                    <h3 class="font-serif text-3xl text-gold-400 mb-8 border-b border-white/10 pb-4 flex items-center gap-4">
+                        <i class="fas fa-cookie-bite text-2xl"></i> Snacks, Momos & Rolls
+                    </h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <!-- Momos -->
+                        <div class="bg-white/5 p-6 rounded-sm border border-white/5 card-hover group">
+                            <div class="flex justify-between items-start mb-2">
+                                <h4 class="text-xl font-serif text-white group-hover:text-gold-400 transition-colors">Fried Momos (5 pcs)</h4>
+                                <span class="text-gold-400 font-bold">₹90</span>
+                            </div>
+                        </div>
+                        <div class="bg-white/5 p-6 rounded-sm border border-white/5 card-hover group">
+                            <div class="flex justify-between items-start mb-2">
+                                <h4 class="text-xl font-serif text-white group-hover:text-gold-400 transition-colors">Kurkure Momos (5 pcs)</h4>
+                                <span class="text-gold-400 font-bold">₹120</span>
+                            </div>
+                        </div>
+                        <!-- Rolls -->
+                        <div class="bg-white/5 p-6 rounded-sm border border-white/5 card-hover group">
+                            <div class="flex justify-between items-start mb-2">
+                                <h4 class="text-xl font-serif text-white group-hover:text-gold-400 transition-colors">Butter Chicken Roll</h4>
+                                <span class="text-gold-400 font-bold">₹120</span>
+                            </div>
+                        </div>
+                        <div class="bg-white/5 p-6 rounded-sm border border-white/5 card-hover group">
+                            <div class="flex justify-between items-start mb-2">
+                                <h4 class="text-xl font-serif text-white group-hover:text-gold-400 transition-colors">Baba Roll</h4>
+                                <span class="text-gold-400 font-bold">₹130</span>
+                            </div>
+                        </div>
+                        <!-- Snacks -->
+                        <div class="bg-white/5 p-6 rounded-sm border border-white/5 card-hover group">
+                            <div class="flex justify-between items-start mb-2">
+                                <h4 class="text-xl font-serif text-white group-hover:text-gold-400 transition-colors">Chicken Popcorn</h4>
+                                <span class="text-gold-400 font-bold">₹200</span>
+                            </div>
+                        </div>
+                        <div class="bg-white/5 p-6 rounded-sm border border-white/5 card-hover group">
+                            <div class="flex justify-between items-start mb-2">
+                                <h4 class="text-xl font-serif text-white group-hover:text-gold-400 transition-colors">French Fries</h4>
+                                <span class="text-gold-400 font-bold">₹100</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="text-center mt-16">
+                <p class="text-gray-500 italic mb-4">Prices are subject to change. Taxes extra as applicable.</p>
+                <a href="https://wa.me/919577407524" class="inline-block px-8 py-3 bg-green-600 hover:bg-green-700 text-white font-bold rounded-sm transition-colors">
+                    <i class="fab fa-whatsapp mr-2"></i> Order Now
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Gallery Section -->
+    <section id="gallery" class="py-24 bg-brand-darker">
+        <div class="max-w-7xl mx-auto px-6 lg:px-12">
+            <div class="text-center mb-16 reveal">
+                <h4 class="text-gold-400 tracking-[0.3em] uppercase text-sm font-bold mb-2">Visual Feast</h4>
+                <h2 class="font-display text-4xl md:text-6xl text-white">The Gallery</h2>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div class="group relative overflow-hidden h-80 reveal">
+                    <img src="https://images.unsplash.com/photo-1565557623262-b51c2513a641?q=80&w=1971&auto=format&fit=crop" alt="Tandoori Chicken" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                    <div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                        <p class="text-gold-400 font-serif text-xl italic">Tandoori Specials</p>
+                    </div>
+                </div>
+                <div class="group relative overflow-hidden h-80 reveal delay-100">
+                    <img src="https://images.unsplash.com/photo-1589302168068-964664d93dc0?q=80&w=1974&auto=format&fit=crop" alt="Biryani" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                    <div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                        <p class="text-gold-400 font-serif text-xl italic">Aromatic Biryani</p>
+                    </div>
+                </div>
+                <!-- FIXED: Changed the broken Chinese food image URL to a working one -->
+                <div class="group relative overflow-hidden h-80 reveal delay-200">
+                    <img src="https://images.unsplash.com/photo-1552611052-33e04de081de?q=80&w=2064&auto=format&fit=crop" alt="Chinese Chowmein" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                    <div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                        <p class="text-gold-400 font-serif text-xl italic">Chinese Delights</p>
+                    </div>
+                </div>
+                <div class="group relative overflow-hidden h-80 reveal">
+                    <img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?q=80&w=2070&auto=format&fit=crop" alt="Restaurant Interior" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                    <div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                        <p class="text-gold-400 font-serif text-xl italic">Cozy Ambience</p>
+                    </div>
+                </div>
+                <div class="group relative overflow-hidden h-80 reveal delay-100">
+                    <img src="https://images.unsplash.com/photo-1606491956689-2ea866880c84?q=80&w=1974&auto=format&fit=crop" alt="Paneer Dish" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                    <div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                        <p class="text-gold-400 font-serif text-xl italic">Vegetarian Best</p>
+                    </div>
+                </div>
+                <div class="group relative overflow-hidden h-80 reveal delay-200">
+                    <img src="https://images.unsplash.com/photo-1555939594-58d7cb561ad1?q=80&w=1974&auto=format&fit=crop" alt="Grilled Meat" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                    <div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                        <p class="text-gold-400 font-serif text-xl italic">Grilled Perfection</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Experience / Features Section -->
+    <section class="py-20 bg-brand-red relative overflow-hidden">
+        <div class="absolute inset-0 opacity-20 bg-[url('https://www.transparenttextures.com/patterns/food.png')]"></div>
+        <div class="max-w-7xl mx-auto px-6 relative z-10">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 text-center">
+                <div class="reveal">
+                    <i class="fas fa-pepper-hot text-4xl text-gold-400 mb-4"></i>
+                    <h3 class="text-xl font-bold text-white mb-2">Authentic Spices</h3>
+                    <p class="text-white/70 text-sm">Directly sourced from the farms of India.</p>
+                </div>
+                <div class="reveal delay-100">
+                    <i class="fas fa-user-chef text-4xl text-gold-400 mb-4"></i>
+                    <h3 class="text-xl font-bold text-white mb-2">Master Chefs</h3>
+                    <p class="text-white/70 text-sm">Years of experience in Tandoor cooking.</p>
+                </div>
+                <div class="reveal delay-200">
+                    <i class="fas fa-wine-glass-alt text-4xl text-gold-400 mb-4"></i>
+                    <h3 class="text-xl font-bold text-white mb-2">Fine Dining</h3>
+                    <p class="text-white/70 text-sm">Perfect atmosphere for family and dates.</p>
+                </div>
+                <div class="reveal delay-300">
+                    <i class="fas fa-truck text-4xl text-gold-400 mb-4"></i>
+                    <h3 class="text-xl font-bold text-white mb-2">Fast Service</h3>
+                    <p class="text-white/70 text-sm">Quick preparation without compromising quality.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="py-24 bg-brand-dark">
+        <div class="max-w-7xl mx-auto px-6 lg:px-12">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                <div class="reveal">
+                    <h4 class="text-gold-400 tracking-[0.3em] uppercase text-sm font-bold mb-2">Get in Touch</h4>
+                    <h2 class="font-display text-4xl md:text-5xl text-white mb-8">Visit Us</h2>
+                    
+                    <div class="space-y-6">
+                        <div class="flex items-start gap-4">
+                            <div class="w-12 h-12 bg-white/5 flex items-center justify-center rounded-full text-gold-400 shrink-0">
+                                <i class="fas fa-map-marker-alt text-xl"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-white font-bold text-lg">Location</h4>
+                                <p class="text-gray-400">Titabar Chariali, Titabor, Assam 785630, India</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start gap-4">
+                            <div class="w-12 h-12 bg-white/5 flex items-center justify-center rounded-full text-gold-400 shrink-0">
+                                <i class="fas fa-phone-alt text-xl"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-white font-bold text-lg">Phone</h4>
+                                <p class="text-gray-400">+91 95774 07524</p>
+                                <a href="tel:+919577407524" class="text-gold-400 text-sm hover:underline">Call Now</a>
+                            </div>
+                        </div>
+
+                        <div class="flex items-start gap-4">
+                            <div class="w-12 h-12 bg-white/5 flex items-center justify-center rounded-full text-gold-400 shrink-0">
+                                <i class="fab fa-whatsapp text-xl"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-white font-bold text-lg">WhatsApp</h4>
+                                <p class="text-gray-400">+91 95774 07524</p>
+                                <a href="https://wa.me/919577407524" target="_blank" class="text-gold-400 text-sm hover:underline">Order via WhatsApp</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-10 flex gap-4">
+                        <a href="#" class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-white hover:bg-gold-400 hover:text-black transition-all"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-white hover:bg-gold-400 hover:text-black transition-all"><i class="fab fa-instagram"></i></a>
+                        <a href="https://maps.app.goo.gl/t18zZU5irSPphu7y9" target="_blank" class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-white hover:bg-gold-400 hover:text-black transition-all"><i class="fab fa-google"></i></a>
+                    </div>
+                </div>
+
+                <div class="h-96 w-full bg-gray-800 rounded-sm overflow-hidden reveal delay-200 border border-white/10 relative">
+                    <!-- Simulated Map Embed -->
+                    <iframe 
+                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3581.257843322112!2d94.1933!3d26.6026!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x37444c882e2f6c3b%3A0x50d83d2041d9b11c!2sTitabar%2C%20Assam!5e0!3m2!1sen!2sin!4v1700000000000!5m2!1sen!2sin" 
+                        width="100%" 
+                        height="100%" 
+                        style="border:0; filter: invert(90%) hue-rotate(180deg);" 
+                        allowfullscreen="" 
+                        loading="lazy" 
+                        referrerpolicy="no-referrer-when-downgrade">
+                    </iframe>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-black border-t border-white/10 py-12">
+        <div class="max-w-7xl mx-auto px-6 lg:px-12 flex flex-col md:flex-row justify-between items-center gap-6">
+            <div class="text-center md:text-left">
+                <h2 class="font-display text-2xl text-white font-bold">HOT TANDOOR</h2>
+                <p class="text-gray-500 text-sm mt-1">Titabar Chariali, Assam</p>
+            </div>
+            
+            <div class="flex gap-8 text-sm text-gray-400">
+                <a href="#home" class="hover:text-gold-400 transition-colors">Home</a>
+                <a href="#menu" class="hover:text-gold-400 transition-colors">Menu</a>
+                <a href="#contact" class="hover:text-gold-400 transition-colors">Contact</a>
+            </div>
+
+            <div class="text-gray-600 text-xs">
+                &copy; 2023 Hot Tandoor. All rights reserved.
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script>
+        // Loader
+        window.addEventListener('load', () => {
+            const loader = document.getElementById('loader');
+            loader.style.opacity = '0';
+            setTimeout(() => {
+                loader.style.display = 'none';
+            }, 500);
+        });
+
+        // Sticky Navbar
+        const navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                navbar.classList.add('bg-black/90', 'backdrop-blur-md', 'shadow-lg', 'py-2');
+                navbar.classList.remove('py-4', 'border-transparent');
+                navbar.classList.add('border-white/10');
+            } else {
+                navbar.classList.remove('bg-black/90', 'backdrop-blur-md', 'shadow-lg', 'py-2', 'border-white/10');
+                navbar.classList.add('py-4', 'border-transparent');
+            }
+        });
+
+        // Mobile Menu Toggle
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const closeMenuBtn = document.getElementById('close-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const mobileLinks = document.querySelectorAll('.mobile-link');
+
+        function toggleMenu() {
+            mobileMenu.classList.toggle('translate-x-full');
+        }
+
+        mobileMenuBtn.addEventListener('click', toggleMenu);
+        closeMenuBtn.addEventListener('click', toggleMenu);
+        
+        mobileLinks.forEach(link => {
+            link.addEventListener('click', toggleMenu);
+        });
+
+        // Scroll Reveal Animation
+        const revealElements = document.querySelectorAll('.reveal');
+
+        const revealOnScroll = () => {
+            const windowHeight = window.innerHeight;
+            const elementVisible = 100;
+
+            revealElements.forEach((reveal) => {
+                const elementTop = reveal.getBoundingClientRect().top;
+                if (elementTop < windowHeight - elementVisible) {
+                    reveal.classList.add('active');
+                }
+            });
+        };
+
+        window.addEventListener('scroll', revealOnScroll);
+        // Trigger once on load
+        revealOnScroll();
+    </script>
+</body>
+  </html>
